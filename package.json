@@ -1,0 +1,19 @@
+{
+    "name": "timelogweb",
+    "version": "0.0.1",
+    "main": "web.js",
+    "dependencies" : {
+        "express": "~3.4.4",
+        "ejs": "~0.8.5",
+        "mongoose": "~3.8.1",
+        "passport": "~0.1.17",
+        "passport-local": "~0.1.6",
+        "connect-flash": "~0.1.1",
+        "sendgrid": "0.3.0-rc.1.7",
+        "bcrypt-nodejs": "latest",
+        "password-generator": "~0.2.2"
+    },
+    "engines": {
+        "node": ">= 0.4.7"
+    }
+}

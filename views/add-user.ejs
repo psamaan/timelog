@@ -1,0 +1,91 @@
+<!-- views/landing.ejs -->
+<!doctype html>
+<!--suppress HtmlUnknownTarget -->
+<html>
+<head>
+    <title>Timelog | Add User</title>
+    <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> replacing with theme -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"> <!-- load font awesome -->
+    <link rel="stylesheet" href="./css/bootstrap.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<div class="container">
+
+    <div class="col-sm-6 col-sm-offset-3">
+
+        <h1><span class="fa fa-sign-in"></span> Add User</h1>
+
+        <!-- show any messages that come back with authentication -->
+        <% if (message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+        <% } %>
+
+        <!-- LOGIN FORM -->
+        <form action="/add-user" method="post">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" class="form-control" name="fullname">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="text" class="form-control" name="email">
+            </div>
+            <div class="form-group hidden">
+                <input type="password" class="form-control" name="password" value="temp">
+            </div>
+
+            <div class="form-group col-sm-3">
+                <label>Work Days</label>
+                <label class="checkbox"> Monday
+                    <input type="checkbox" class="checkbox" name="days[]" value="Mon" checked>
+                </label>
+                <label class="checkbox"> Tuesday
+                    <input type="checkbox" class="checkbox" name="days[]" value="Tue" checked>
+                </label>
+                <label class="checkbox"> Wednesday
+                    <input type="checkbox" class="checkbox" name="days[]" value="Wed" checked>
+                </label>
+                <label class="checkbox"> Thursday
+                    <input type="checkbox" class="checkbox" name="days[]" value="Thu" checked>
+                </label>
+                <label class="checkbox"> Friday
+                    <input type="checkbox" class="checkbox" name="days[]" value="Fri" checked>
+                </label>
+                <label class="checkbox"> Saturday
+                    <input type="checkbox" class="checkbox" name="days[]" value="Sat">
+                </label>
+                <label class="checkbox"> Sunday
+                    <input type="checkbox" class="checkbox" name="days[]" value="Sun">
+                </label>
+
+            </div>
+
+            <div class="form-group col-sm-2">
+                <label>Daily Hours</label>
+                <input type="number" class="form-control" name="hours" value="8">
+            </div>
+
+            <div class="form-group col-sm-2">
+                <label>Vacation Days</label>
+                <input type="number" class="form-control" name="vacations" value="12">
+            </div>
+
+            <div class="form-group col-sm-2">
+                <label>Available Sick Days</label>
+                <input type="number" class="form-control" name="sick" value="12">
+            </div>
+
+            <div class="form-group col-sm-3">
+                <label class="checkbox"> Admin
+                    <input type="checkbox" class="checkbox" name="admin">
+                </label>
+             </div>
+
+            <button type="submit" class="btn btn-warning btn-lg pull-right">Add</button>
+        </form>
+
+    </div>
+</div>
+</body>
+</html>

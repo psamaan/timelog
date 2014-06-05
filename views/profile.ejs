@@ -1,0 +1,32 @@
+<!-- PROFILE INFORMATION -->
+<div class="col-sm-8 pull-left">
+    <button class="pull-left btn btn-primary btn-lg animate-if" ng-click="clockIn()" ng-if="!isClockedIn" ng-class="{'loading': AJAXLoading}">Clock In</button>
+    <iframe class="pull-right animate-if" ng-if="isClockedIn" height="350" width="350" frameborder="0" style="border:0" ng-src="{{locUrl}}"></iframe>
+</div>
+<div class="col-sm-3 pull-right">
+    <div class="well">
+        <h3><span class="fa fa-user"></span> <%= user.fullname %></h3>
+        <p>
+            <strong>email</strong>: <%= user.credentials.email %><br>
+            <br>
+            <button class="btn btn-warning center-block" ng-click="changePass=!changePass" ng-show="!changePass">Change Password</button>
+
+            <button ng-disabled="forms.changePassword.$invalid" class="btn btn-warning center-block" ng-click="sendPass()" ng-show="changePass">Save</button>
+
+            <button class="btn btn-info pull-right" style="margin-top: -35px;" ng-click="changePass=!changePass" ng-show="changePass">Cancel</button>
+        </p>
+    </div>
+        <form name="forms.changePassword" ng-if="changePass" class="animate-if">
+            <div class="form-group">
+                <label>New Password</label>
+                <input type="password" class="form-control" name="newPassword" ng-model="forms.changePassword.pass" equals="{{forms.changePassword.passconfirm}}" required>
+            </div>
+            <div class="form-group" name="confirmation">
+                <label>Confirm New Password</label>
+                <input type="password" class="form-control" name="confirmationPassword" ng-model="forms.changePassword.passconfirm" equals="{{forms.changePassword.pass}}" required>
+            </div>
+            <div class="alert-danger alert" ng-show="forms.changePassword.confirmationPassword.$error.equals">
+                The password and confirm password fields must be the same.
+            </div>
+        </form>
+</div>
