@@ -8,8 +8,7 @@ var timelog = angular.module('timelog', [
     'ngRoute',
     'ngAnimate',
     'timelogControllers',
-    'timelogDirectives',
-    'ngQuickDate'
+    'timelogDirectives'
 ]);
 timelog.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
@@ -20,7 +19,6 @@ timelog.config(['$routeProvider', function($routeProvider) {
 timelog.run(['$rootScope', function($rootScope) {
 
     $rootScope.alertMessage = [];
-    $rootScope.AJAXLoading = false;
 
 }]);
 

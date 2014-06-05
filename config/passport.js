@@ -6,8 +6,8 @@
 var generatePassword = require('password-generator');
 var LocalStrategy = require('passport-local').Strategy;
 var sendgrid  = require('sendgrid')(
-        process.env.SENDGRID_USERNAME,
-        process.env.SENDGRID_PASSWORD
+        process.env.SENDGRID_USERNAME || 'app25228932@heroku.com', // TODO remove sendgrid username and password
+        process.env.SENDGRID_PASSWORD || 'rwgdkc4i'
 );
 
 // load up the user model
@@ -41,7 +41,7 @@ module.exports = function(passport) {
     // we are using named strategies since we have one for login and one for signup
     // by default, if there was no name, it would just be called 'local'
 
-    passport.use('local-add', new LocalStrategy({
+    passport.use('local-signup', new LocalStrategy({
             // by default, local strategy uses username and password, we will override with email
             usernameField : 'email',
             passwordField : 'password',
@@ -92,7 +92,7 @@ module.exports = function(passport) {
                                 if (err) { return console.error(err); }
                                 console.log("New account created, mail sending status: " + JSON.stringify(json));
                             });
-                            return done(null, req.user);
+                            return done(null, newUser);
                         });
                     }
 
