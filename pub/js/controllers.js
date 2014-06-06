@@ -25,7 +25,6 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                     message.text = "Password Changed";
                     $rootScope.alertMessage.push(message);
                 }
-
             });
         };
         $scope.clockIn = function() {

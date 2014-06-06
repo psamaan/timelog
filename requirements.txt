@@ -1,3 +1,4 @@
+TODO make all pages mobile responsive
 TODO Pro-rated increments of vacation/sick day credit every other friday
 TODO Vacation request flow
 TODO Sick Day notification flow

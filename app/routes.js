@@ -45,7 +45,7 @@ module.exports = function(app, passport, sendgrid, configs) {
     });
 
     // process the add user form
-    app.post('/add-user', isLoggedInAdmin, passport.authenticate('local-signup', {
+    app.post('/add-user', isLoggedInAdmin, passport.authenticate('local-add', {
         successRedirect : '/in', // redirect to the secure section
         failureRedirect : '/add-user', // redirect back to the add user page if there is an error
         failureFlash : true // allow flash messages

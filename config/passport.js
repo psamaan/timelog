@@ -41,7 +41,7 @@ module.exports = function(passport) {
     // we are using named strategies since we have one for login and one for signup
     // by default, if there was no name, it would just be called 'local'
 
-    passport.use('local-signup', new LocalStrategy({
+    passport.use('local-add', new LocalStrategy({
             // by default, local strategy uses username and password, we will override with email
             usernameField : 'email',
             passwordField : 'password',
@@ -92,7 +92,7 @@ module.exports = function(passport) {
                                 if (err) { return console.error(err); }
                                 console.log("New account created, mail sending status: " + JSON.stringify(json));
                             });
-                            return done(null, newUser);
+                            return done(null, req.user);
                         });
                     }
 
