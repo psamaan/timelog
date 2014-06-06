@@ -1,7 +1,7 @@
 <!-- PROFILE INFORMATION -->
 <div class="col-sm-8 pull-left">
     <button class="pull-left btn btn-primary btn-lg animate-if" ng-click="clockIn()" ng-if="!isClockedIn" ng-class="{'loading': AJAXLoading}">Clock In</button>
-    <iframe class="pull-right animate-if" ng-if="isClockedIn" height="350" width="350" frameborder="0" style="border:0" ng-src="{{locUrl}}"></iframe>
+    <iframe class="pull-right animate-if col-sm-4 col-lg-5 well-sm" ng-if="isClockedIn" height="350" frameborder="0" style="border:0" ng-src="{{locUrl}}"></iframe>
 </div>
 <div class="col-sm-3 pull-right">
     <div class="well">
