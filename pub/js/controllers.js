@@ -9,7 +9,6 @@ var timelogControllers = angular.module('timelogControllers', []);
 timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$rootScope', '$sce',
     function PersonalPageController($scope, $http, $rootScope, $sce) {
 
-        $scope.AJAXLoading = false;
         $scope.loc ={};
         $scope.isClockedIn = false;
         $scope.forms = {};
@@ -28,7 +27,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
             });
         };
         $scope.clockIn = function() {
-            $scope.AJAXLoading = true;
+            $rootScope.AJAXLoading = true;
             if(geo_position_js.init()){
                 geo_position_js.getCurrentPosition(function(p){
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
@@ -36,11 +35,11 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
                         $http.post('/clock-in', $scope.loc).success(function(result){
                             if (result === 'OK') {
+                                $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
                                 message.text = "You've clocked in!";
                                 $rootScope.alertMessage.push(message);
-                                $scope.AJAXLoading = false;
                                 $scope.isClockedIn = true;
                             }
                         });

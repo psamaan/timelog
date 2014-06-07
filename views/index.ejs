@@ -25,8 +25,9 @@
     <script src="./js/controllers.js"></script>
 
 </head>
-<body>
+<body ng-class="{'loading': AJAXLoading}">
 <div class="container">
+    <i class="fa fa-spinner" id="alert-img" ng-if="AJAXLoading" ></i>
     <alert></alert>
     <div class="page-header text-center">
         <h1><span class="fa fa-clock-o"></span> Timelog</h1>

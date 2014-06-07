@@ -3,7 +3,7 @@
  */
 
 
-// load up the user model
+// load up the user and log models
 var User = require('../app/models/user');
 var Log = require('../app/models/log');
 

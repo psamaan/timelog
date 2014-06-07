@@ -1,10 +1,10 @@
 <!-- PROFILE INFORMATION -->
-<div class="col-sm-8 pull-left">
-    <button class="pull-left btn btn-primary btn-lg animate-if" ng-click="clockIn()" ng-if="!isClockedIn" ng-class="{'loading': AJAXLoading}">Clock In</button>
-    <iframe class="pull-right animate-if col-sm-4 col-lg-5 well-sm" ng-if="isClockedIn" height="350" frameborder="0" style="border:0" ng-src="{{locUrl}}"></iframe>
+<div class="col-sm-5 col-md-9 pull-left">
+    <iframe class="pull-right animate-if col-sm-4 col-lg-5" style="max-width: 100%; border:0; max-height: 250px;" ng-if="isClockedIn" height="350" frameborder="0" ng-src="{{locUrl}}"></iframe>
+    <button class="pull-left btn btn-primary btn-lg animate-if" ng-click="clockIn()" ng-if="!isClockedIn">Clock In</button>
 </div>
 <div class="col-sm-3 pull-right">
-    <div class="well">
+    <div class="well sidebar">
         <h3><span class="fa fa-user"></span> <%= user.fullname %></h3>
         <p>
             <strong>email</strong>: <%= user.credentials.email %><br>

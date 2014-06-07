@@ -19,6 +19,7 @@ timelog.config(['$routeProvider', function($routeProvider) {
 timelog.run(['$rootScope', function($rootScope) {
 
     $rootScope.alertMessage = [];
+    $rootScope.AJAXLoading = false;
 
 }]);
 
