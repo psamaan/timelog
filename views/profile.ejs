@@ -1,14 +1,19 @@
+<div ng-init="userState='<%= user.state %>';isClockedIn=(userState==='working')"></div>
 <!-- PROFILE INFORMATION -->
 <div class="col-sm-5 col-md-9 pull-left">
-    <iframe class="pull-right animate-if col-sm-4 col-lg-5" style="max-width: 100%; border:0; max-height: 250px;" ng-if="isClockedIn" height="350" frameborder="0" ng-src="{{locUrl}}"></iframe>
-    <button class="pull-left btn btn-primary btn-lg animate-if" ng-click="clockIn()" ng-if="!isClockedIn">Clock In</button>
+    <iframe class="pull-right animate-if col-sm-4 col-lg-5" ng-if="locUrl" style="max-width: 100%; border:0; max-height: 250px;" height="350" frameborder="0" ng-src="{{locUrl}}"></iframe>
+    <div ng-switch="userState" class="animate-switch-container">
+    <button class="pull-left btn btn-primary btn-lg animate-switch" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()" ng-switch-when="off">Clock In</button>
+    <button class="pull-left btn btn-warning btn-lg animate-switch" ng-class="{'disabled': AJAXLoading}" ng-click="clockOut()" ng-switch-when="working">Clock Out</button>
+    <span class="pull-left alert alert-danger animate-switch" ng-switch-default>Your clock-in isn't consistent, please contact support</span>
+    </div>
 </div>
 <div class="col-sm-3 pull-right">
     <div class="well sidebar">
         <h3><span class="fa fa-user"></span> <%= user.fullname %></h3>
+        <div class="bs-callout text-center lead" ng-class="{'bs-callout-info': userState === 'working','bs-callout-warning':userState === 'lunch','bs-callout-danger':userState === 'sick','bs-callout-danger':userState === 'off'}">{{userState}}</div><br>
         <p>
-            <strong>email</strong>: <%= user.credentials.email %><br>
-            <br>
+            <strong>username</strong>: <%= user.credentials.email %><br><br>
             <button class="btn btn-warning center-block" ng-click="changePass=!changePass" ng-show="!changePass">Change Password</button>
 
             <button ng-disabled="forms.changePassword.$invalid" class="btn btn-warning center-block" ng-click="sendPass()" ng-show="changePass">Save</button>
@@ -24,6 +29,10 @@
             <div class="form-group" name="confirmation">
                 <label>Confirm New Password</label>
                 <input type="password" class="form-control" name="confirmationPassword" ng-model="forms.changePassword.passconfirm" equals="{{forms.changePassword.pass}}" required>
+            </div>
+            <div class="form-group hidden" name="confirmation">
+                <label>email</label>
+                <input type="email" class="form-control" name="email" ng-model="forms.changePassword.email" value="<%= user.credentials.email %>">
             </div>
             <div class="alert-danger alert" ng-show="forms.changePassword.confirmationPassword.$error.equals">
                 The password and confirm password fields must be the same.

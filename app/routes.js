@@ -55,20 +55,20 @@ module.exports = function(app, passport, sendgrid, configs) {
     // =====================================
     // handle the change password form for the logged in user
     app.post('/change-password', isLoggedIn, function(req, res) {
-        console.log(JSON.stringify(req.body));
+        if (req.user.credentials.admin || req.body.email === req.user.credentials.email) {
             if (req.body.pass !== req.body.passconfirm)
                 res.status(403).send('Password Confirmation Mismatch');
 
-             User.findOne({ 'credentials.email' :  req.user.credentials.email }, function(err, user) {
+            User.findOne({ 'credentials.email': req.body.email }, function (err, user) {
                 // if there are any errors, throw the error
                 if (err)
                     throw err;
-                 //No user, send forbidden
+                //No user, send forbidden
                 if (!user)
                     res.status(403).send('No Such User');
                 var newUser = new User();
                 user.credentials.password = newUser.generateHash(req.body.pass);
-                user.save(function(err) {
+                user.save(function (err) {
                     if (err)
                         throw err;
                     sendgrid.send({
@@ -76,14 +76,19 @@ module.exports = function(app, passport, sendgrid, configs) {
                         from: 'it@medicatechusa.com',
                         subject: 'New Timelog Password Saved',
                         text: 'Your Timelog password has been changed as requested. Your new password is \'' + req.body.pass + '\'.'
-                    }, function(err, json) {
-                        if (err) { return console.error(err); }
+                    }, function (err, json) {
+                        if (err) {
+                            return console.error(err);
+                        }
                         console.log("Password changed for " + user.credentials.email + ", mail sending status: " + JSON.stringify(json));
                     });
                     //all worked, send OK
                     res.status(200).send('OK');
                 });
-             });
+            });
+        }
+        else
+            res.status(401).send('Unauthorized');
     });
 
     // =====================================
@@ -97,8 +102,36 @@ module.exports = function(app, passport, sendgrid, configs) {
         clockInLog.loc = req.body;
         clockInLog.save(function(err) {
             if (err) throw err;
-            //all worked, send OK
-            res.status(200).send('OK');
+            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                user.state = "working";
+                user.save(function(err) {
+                    if (err) throw err;
+                    //all worked, send OK
+                    res.status(200).send('OK');
+                });
+            });
+        });
+    });
+
+    // =====================================
+    // CLOCK-OUT ============================
+    // =====================================
+    app.post('/clock-out', isLoggedIn, function(req, res){
+        var clockInLog = new Log();
+        clockInLog.eid = req.user._id;
+        clockInLog.name = req.user.fullname;
+        clockInLog.action = "out";
+        clockInLog.loc = req.body;
+        clockInLog.save(function(err) {
+            if (err) throw err;
+            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                user.state = "off";
+                user.save(function(err) {
+                    if (err) throw err;
+                    //all worked, send OK
+                    res.status(200).send('OK');
+                });
+            });
         });
     });
 

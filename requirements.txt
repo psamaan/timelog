@@ -1,9 +1,8 @@
-TODO Pro-rated increments of vacation/sick day credit every other friday
-TODO Persist state and add clock-out + assignment and lunch
+TODO lunch buttons and state
 TODO fetch personal reports
 TODO Admin page
 
-TODO Sick Day notification flow
+TODO Sick Day flow
 TODO Vacation request flow
 TODO absence/neglect comment and manager review request
 TODO managers can change login/logout time on review request, shows signed and highlighted
