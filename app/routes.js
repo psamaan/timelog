@@ -55,6 +55,7 @@ module.exports = function(app, passport, sendgrid, configs) {
     // =====================================
     // handle the change password form for the logged in user
     app.post('/change-password', isLoggedIn, function(req, res) {
+        console.log(req.body);
         if (req.user.credentials.admin || req.body.email === req.user.credentials.email) {
             if (req.body.pass !== req.body.passconfirm)
                 res.status(403).send('Password Confirmation Mismatch');

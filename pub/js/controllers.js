@@ -14,6 +14,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         $scope.changePass = false;
 
         $scope.sendPass = function() {
+            $scope.forms.changePassword.email= $scope.userEmail;
             $http.post('/change-password', $scope.forms.changePassword).success(function(result){
                 console.log(result);
                 $scope.changePass = false;
