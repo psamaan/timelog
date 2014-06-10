@@ -1,10 +1,19 @@
-<div ng-init="userState='<%= user.state %>';isClockedIn=(userState==='working');userEmail='<%= user.credentials.email %>'"></div>
+<div ng-init="userState='<%= user.state %>';isClockedIn=(userState==='working');userEmail='<%= user.credentials.email %>';userLunch=<%= user.hadlunch %>;"></div>
 <!-- PROFILE INFORMATION -->
 <div class="col-sm-5 col-md-9 pull-left">
     <iframe class="pull-right animate-if col-sm-4 col-lg-5" ng-if="locUrl" style="max-width: 100%; border:0; margin-top: 50px" height="250px" frameborder="0" ng-src="{{locUrl}}"></iframe>
     <div ng-switch="userState" class="animate-switch-container">
-    <button class="pull-left btn btn-primary btn-lg animate-switch" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()" ng-switch-when="off">Clock In</button>
-    <button class="pull-left btn btn-warning btn-lg animate-switch" ng-class="{'disabled': AJAXLoading}" ng-click="clockOut()" ng-switch-when="working">Clock Out</button>
+        <div class=" animate-switch" ng-switch-when="off">
+            <button class="pull-left btn btn-primary btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()">Clock In</button>
+        </div>
+        <div class=" animate-switch" ng-switch-when="working">
+            <button class="pull-left btn btn-warning btn-lg" ng-class="{'disabled': AJAXLoading}" ng-show="!userLunch" ng-click="toLunch()">Go to Lunch</button>
+            <button class="pull-left btn btn-danger btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockOut()">Clock Out</button>
+        </div>
+        <div class=" animate-switch" ng-switch-when="lunch">
+            <button class="pull-left btn btn-success btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="fromLunch()">Back from Lunch</button>
+            <button class="pull-left btn btn-danger btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockOut()">Clock Out</button>
+        </div>
     <span class="pull-left alert alert-danger animate-switch" ng-switch-default>Your clock-in isn't consistent, please contact support</span>
     </div>
 </div>

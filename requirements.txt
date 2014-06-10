@@ -1,4 +1,3 @@
-TODO lunch buttons and state
 TODO fetch personal reports
 TODO Admin page
 

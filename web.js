@@ -30,7 +30,7 @@ app.configure(function() {
     'use strict';
 
     // set up our express application
-    app.use(express.logger('dev')); // log every request to the console
+    app.use(express.logger('dev')); // log every request to the console TODO disable dev logging mode
     app.use(express.cookieParser()); // read cookies (needed for auth)
     app.use(express.bodyParser()); // get information from html forms
     app.set('view engine', 'ejs'); // set up ejs for templates

@@ -55,7 +55,6 @@ module.exports = function(app, passport, sendgrid, configs) {
     // =====================================
     // handle the change password form for the logged in user
     app.post('/change-password', isLoggedIn, function(req, res) {
-        console.log(req.body);
         if (req.user.credentials.admin || req.body.email === req.user.credentials.email) {
             if (req.body.pass !== req.body.passconfirm)
                 res.status(403).send('Password Confirmation Mismatch');
@@ -96,15 +95,16 @@ module.exports = function(app, passport, sendgrid, configs) {
     // CLOCK-IN ============================
     // =====================================
     app.post('/clock-in', isLoggedIn, function(req, res){
-        var clockInLog = new Log();
-        clockInLog.eid = req.user._id;
-        clockInLog.name = req.user.fullname;
-        clockInLog.action = "in";
-        clockInLog.loc = req.body;
-        clockInLog.save(function(err) {
+        var clockLog = new Log();
+        clockLog.eid = req.user._id;
+        clockLog.name = req.user.fullname;
+        clockLog.action = "clock in";
+        clockLog.loc = req.body;
+        clockLog.save(function(err) {
             if (err) throw err;
             User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
                 user.state = "working";
+                user.hadlunch = false;
                 user.save(function(err) {
                     if (err) throw err;
                     //all worked, send OK
@@ -113,17 +113,59 @@ module.exports = function(app, passport, sendgrid, configs) {
             });
         });
     });
-
     // =====================================
-    // CLOCK-OUT ============================
+    // LUNCH-OUT ===========================
+    // =====================================
+    app.post('/lunch-out', isLoggedIn, function(req, res){
+        var clockLog = new Log();
+        clockLog.eid = req.user._id;
+        clockLog.name = req.user.fullname;
+        clockLog.action = "out to lunch";
+        clockLog.loc = req.body;
+        clockLog.save(function(err) {
+            if (err) throw err;
+            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                user.state = "lunch";
+                user.save(function(err) {
+                    if (err) throw err;
+                    //all worked, send OK
+                    res.status(200).send('OK');
+                });
+            });
+        });
+    });
+    // =====================================
+    // LUNCH-IN ============================
+    // =====================================
+    app.post('/lunch-in', isLoggedIn, function(req, res){
+        var clockLog = new Log();
+        clockLog.eid = req.user._id;
+        clockLog.name = req.user.fullname;
+        clockLog.action = "back from lunch";
+        clockLog.loc = req.body;
+        clockLog.save(function(err) {
+            if (err) throw err;
+            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                user.state = "working";
+                user.hadlunch = true;
+                user.save(function(err) {
+                    if (err) throw err;
+                    //all worked, send OK
+                    res.status(200).send('OK');
+                });
+            });
+        });
+    });
+    // =====================================
+    // CLOCK-OUT ===========================
     // =====================================
     app.post('/clock-out', isLoggedIn, function(req, res){
-        var clockInLog = new Log();
-        clockInLog.eid = req.user._id;
-        clockInLog.name = req.user.fullname;
-        clockInLog.action = "out";
-        clockInLog.loc = req.body;
-        clockInLog.save(function(err) {
+        var clockLog = new Log();
+        clockLog.eid = req.user._id;
+        clockLog.name = req.user.fullname;
+        clockLog.action = "clock out";
+        clockLog.loc = req.body;
+        clockLog.save(function(err) {
             if (err) throw err;
             User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
                 user.state = "off";

@@ -20,7 +20,8 @@ var userSchema = mongoose.Schema({
     days             : { type: [String], enum: ["mon","tue","wed","thu","fri","sat","sun"] },
     vacations        : Number,
     sick             : Number,
-    state            : { type: [String], enum: ["working", "assignment", "lunch", "sick", "off"] , default: "off"}
+    state            : { type: [String], enum: ["working", "assignment", "lunch", "sick", "off"] , default: "off"},
+    hadlunch         : Boolean
 });
 
 // methods ======================
