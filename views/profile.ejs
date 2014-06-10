@@ -1,8 +1,8 @@
 <div ng-init="userState='<%= user.state %>';isClockedIn=(userState==='working');userEmail='<%= user.credentials.email %>';userLunch=<%= user.hadlunch %>;"></div>
 <!-- PROFILE INFORMATION -->
-<div class="col-sm-5 col-md-9 pull-left">
-    <iframe class="pull-right animate-if col-sm-4 col-lg-5" ng-if="locUrl" style="max-width: 100%; border:0; margin-top: 50px" height="250px" frameborder="0" ng-src="{{locUrl}}"></iframe>
-    <div ng-switch="userState" class="animate-switch-container">
+<div class="col-sm-4 pull-left">
+    <iframe class="pull-left animate-if" ng-if="locUrl" style="max-width: 100%; border:0; margin-top: 55px; margin-left: -10px;" height="250px" frameborder="0" ng-src="{{locUrl}}"></iframe>
+    <div ng-switch="userState" class="animate-switch-container" style="min-width:250px;">
         <div class=" animate-switch" ng-switch-when="off">
             <button class="pull-left btn btn-primary btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()">Clock In</button>
         </div>
