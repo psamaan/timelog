@@ -44,7 +44,7 @@ module.exports = function(app, passport, sendgrid, configs) {
         res.render('add-user.ejs', { message: req.flash('signupMessage') });
     });
 
-    // process the add user form
+    // process the add user form by passing it to passport
     app.post('/add-user', isLoggedInAdmin, passport.authenticate('local-add', {
         successRedirect : '/in', // redirect to the secure section
         failureRedirect : '/add-user', // redirect back to the add user page if there is an error
@@ -53,7 +53,7 @@ module.exports = function(app, passport, sendgrid, configs) {
     // =====================================
     // CHANGE PASSWORD =====================
     // =====================================
-    // handle the change password form for the logged in user
+    // handle the change password form for a user, self or ir you're an admin
     app.post('/change-password', isLoggedIn, function(req, res) {
         if (req.user.credentials.admin || req.body.email === req.user.credentials.email) {
             if (req.body.pass !== req.body.passconfirm)
@@ -92,6 +92,33 @@ module.exports = function(app, passport, sendgrid, configs) {
     });
 
     // =====================================
+    // SECURE SECTION =====================
+    // =====================================
+    // we will want this protected so you have to be logged in to visit
+    // we will use route middleware to verify this (the isLoggedIn function)
+    app.get('/in', isLoggedIn, function(req, res) {
+        res.render('index.ejs', {
+            user : req.user // get the user out of session and pass to template
+        });
+    });
+
+    // =====================================
+    // LOGOUT ==============================
+    // =====================================
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+    // =====================================
+    // PROFILE =============================
+    // =====================================
+    app.get('/profile', isLoggedIn, function(req, res) {
+        res.render('profile.ejs', {
+            user : req.user // get the user out of session and pass to template
+        });
+    });
+
+// =====================================
     // CLOCK-IN ============================
     // =====================================
     app.post('/clock-in', isLoggedIn, function(req, res){
@@ -177,33 +204,15 @@ module.exports = function(app, passport, sendgrid, configs) {
             });
         });
     });
-
     // =====================================
-    // SECURE SECTION =====================
+    // FETCH-OWN-LOG ===========================
     // =====================================
-    // we will want this protected so you have to be logged in to visit
-    // we will use route middleware to verify this (the isLoggedIn function)
-    app.get('/in', isLoggedIn, function(req, res) {
-        res.render('index.ejs', {
-            user : req.user // get the user out of session and pass to template
+    app.get('/user-log', isLoggedIn, function(req,res){
+        Log.find({'eid':req.user._id}).limit(120).exec(function (err, docs) {
+            res.status(200).send(docs);
         });
     });
 
-    // =====================================
-    // LOGOUT ==============================
-    // =====================================
-    app.get('/logout', function(req, res) {
-        req.logout();
-        res.redirect('/');
-    });
-    // =====================================
-    // PROFILE =============================
-    // =====================================
-    app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs', {
-            user : req.user // get the user out of session and pass to template
-        });
-    });
 };
 
 // route middleware to make sure a user is logged in

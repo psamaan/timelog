@@ -6,13 +6,50 @@
 
 var timelogControllers = angular.module('timelogControllers', []);
 
+timelogControllers.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    };
+});
+
 timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$rootScope', '$sce',
     function PersonalPageController($scope, $http, $rootScope, $sce) {
 
         $scope.loc ={};
         $scope.forms = {};
         $scope.changePass = false;
+        $scope.userLog = {};
+        $rootScope.selectedLog = {};
 
+        $scope.currentPage = 0;
+        $scope.pageSize = 5;
+
+        $scope.numberOfPages=function(){
+            return Math.ceil($scope.userLog.length/$scope.pageSize);
+        };
+
+        $scope.refreshLog = function(){
+            $http.get('user-log').success(function(docs){
+                $scope.userLog = docs;
+            });
+        };
+
+        $scope.selectLog = function(logEntry){
+            if (logEntry.selected) {
+                logEntry.selected = false;
+                $rootScope.selectedLog = {};
+            }
+            else {
+                for (var i = 0; i < $scope.userLog.length; i++) $scope.userLog[i].selected = false;
+                logEntry.selected = true;
+                $rootScope.selectedLog.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + logEntry.loc.lat + "%2C" + logEntry.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
+            }
+        };
+
+        $scope.refreshLog();
+
+        //Change password function
         $scope.sendPass = function() {
             $scope.forms.changePassword.email= $scope.userEmail;
             $http.post('/change-password', $scope.forms.changePassword).success(function(result){
@@ -26,6 +63,8 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                 }
             });
         };
+
+        //Clock actions here
         $scope.clockIn = function() {
             $rootScope.AJAXLoading = true;
             if(geo_position_js.init()){
@@ -35,6 +74,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
                         $http.post('/clock-in', $scope.loc).success(function(result){
                             if (result === 'OK') {
+                                $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
@@ -55,7 +95,6 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                 console.log("GPS functionality not available/allowed");
             }
         };
-
         $scope.clockOut = function() {
             $rootScope.AJAXLoading = true;
             if(geo_position_js.init()){
@@ -65,6 +104,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
                         $http.post('/clock-out', $scope.loc).success(function(result){
                             if (result === 'OK') {
+                                $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
@@ -93,6 +133,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
                         $http.post('/lunch-out', $scope.loc).success(function(result){
                             if (result === 'OK') {
+                                $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
@@ -121,6 +162,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
                         $http.post('/lunch-in', $scope.loc).success(function(result){
                             if (result === 'OK') {
+                                $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
@@ -141,7 +183,5 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                 console.log("GPS functionality not available/allowed");
             }
         };
-
-
     }]);
 

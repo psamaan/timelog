@@ -1,7 +1,10 @@
 <div ng-init="userState='<%= user.state %>';isClockedIn=(userState==='working');userEmail='<%= user.credentials.email %>';userLunch=<%= user.hadlunch %>;"></div>
 <!-- PROFILE INFORMATION -->
-<div class="col-sm-4 pull-left">
-    <iframe class="pull-left animate-if" ng-if="locUrl" style="max-width: 100%; border:0; margin-top: 55px; margin-left: -10px;" height="250px" frameborder="0" ng-src="{{locUrl}}"></iframe>
+<div class="col-sm-3">
+    <div ng-if="locUrl" class="well map pull-left animate-if">
+        <strong>Location Now</strong>
+        <iframe frameborder="1" height="250px" width="100%" ng-src="{{locUrl}}"></iframe>
+    </div>
     <div ng-switch="userState" class="animate-switch-container" style="min-width:250px;">
         <div class=" animate-switch" ng-switch-when="off">
             <button class="pull-left btn btn-primary btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()">Clock In</button>
@@ -17,13 +20,44 @@
     <span class="pull-left alert alert-danger animate-switch" ng-switch-default>Your clock-in isn't consistent, please contact support</span>
     </div>
 </div>
-<div class="col-sm-3 pull-right">
+<div class="col-sm-3 text-center" style="margin-top: 50px;">
+    <strong>Your Activity Log</strong>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-condensed">
+            <thead>
+            <tr>
+                <th>action</th>
+                <th>date/time</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr class="clickable" ng-class="{'info': logEntry.selected}" ng-repeat="logEntry in userLog | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:'datetime':true" ng-click="selectLog(logEntry)">
+                <td>{{logEntry.action}}</td>
+                <td>{{logEntry.datetime | date: 'medium'}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="center-block">
+        <button class="btn btn-sm" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+            Previous
+        </button>
+        {{currentPage+1}}/{{numberOfPages()}}
+        <button class="btn btn-sm" ng-disabled="currentPage >= userLog.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+            Next
+        </button>
+    </div>
+</div>
+<div class="col-sm-3" style="margin-top: 50px;">
+<iframe class="animate-if" ng-if="selectedLog.locUrl" frameborder="1" height="250px" width="100%" ng-src="{{selectedLog.locUrl}}"></iframe>
+</div>
+<div class="col-sm-3">
     <div class="well sidebar">
         <h3><span class="fa fa-user"></span> <%= user.fullname %></h3>
         <div class="bs-callout text-center lead" ng-class="{'bs-callout-info': userState === 'working','bs-callout-warning':userState === 'lunch','bs-callout-danger':userState === 'sick','bs-callout-danger':userState === 'off'}">{{userState}}</div><br>
         <p>
             <strong>username</strong>: <%= user.credentials.email %><br><br>
-            <button class="btn btn-warning center-block" ng-click="changePass=!changePass" ng-show="!changePass">Change Password</button>
+            <a class="clickable" ng-click="changePass=!changePass" ng-show="!changePass">Change Password</a>
 
             <button ng-disabled="forms.changePassword.$invalid" class="btn btn-warning center-block" ng-click="sendPass()" ng-show="changePass">Save</button>
 

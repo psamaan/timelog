@@ -1,4 +1,5 @@
-TODO fetch personal reports
+TODO Profile page to contain hours worked per day and week, plus available vacation credit
+TODO calculations for absence and so on
 TODO Admin page
 
 TODO Sick Day flow
