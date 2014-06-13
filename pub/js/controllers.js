@@ -19,6 +19,9 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         $scope.loc ={};
         $scope.forms = {};
         $scope.changePass = false;
+
+        // TODO refactor log handler code to a service, and log display html to a template to include.
+
         $scope.userLogArray = [];
         $scope.userLog = {};
         $rootScope.selectedLog = {};
@@ -33,8 +36,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
             return Math.ceil($scope.userLogArray.length/$scope.pageSize);
         };
 
-
-        $scope.refreshLog = function(){
+        $scope.refreshLog = function(){ //TODO simplify this, no real need for duplicate log data structure
             $http.get('user-log').success(function(docs){
                 var days = Object.keys($scope.userLog);
                 for (var j = 0; j <= days.length; j++) {
@@ -47,13 +49,10 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                     }
                 }
                 for (var daysLog in $scope.userLog) {
-                    console.log(daysLog);
                     var foundArray = false;
                     for (var l = 0 ; l < $scope.userLogArray.length; l++) if ($scope.userLogArray[l][0].datetime === $scope.userLog[daysLog][0].datetime) foundArray = true;
                     if (!foundArray) $scope.userLogArray.push($scope.userLog[daysLog]);
                 }
-                console.log($scope.userLog);
-                console.log($scope.userLogArray);
             });
         };
 
@@ -70,6 +69,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         };
 
         $scope.refreshLog();
+
 
         //Change password function
         $scope.sendPass = function() {

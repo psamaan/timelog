@@ -1,28 +1,32 @@
 <div ng-init="userState='<%= user.state %>';isClockedIn=(userState==='working');userEmail='<%= user.credentials.email %>';userLunch=<%= user.hadlunch %>;"></div>
 <!-- PROFILE INFORMATION -->
 <div class="col-sm-3">
+    <div ng-if="selectedLog.locUrl" class="well map pull-left animate-if">
+        <strong>Location of selected log entry</strong>
+        <iframe frameborder="1" height="250px" width="100%" ng-src="{{selectedLog.locUrl}}"></iframe>
+    </div>
     <div ng-if="locUrl" class="well map pull-left animate-if">
         <strong>Location Now</strong>
         <iframe frameborder="1" height="250px" width="100%" ng-src="{{locUrl}}"></iframe>
     </div>
     <div ng-switch="userState" class="animate-switch-container" style="min-width:250px;">
-        <div class=" animate-switch" ng-switch-when="off">
-            <button class="pull-left btn btn-primary btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()">Clock In</button>
-        </div>
-        <div class=" animate-switch" ng-switch-when="working">
-            <button class="pull-left btn btn-warning btn-lg" ng-class="{'disabled': AJAXLoading}" ng-show="!userLunch" ng-click="toLunch()">Go to Lunch</button>
-            <button class="pull-left btn btn-danger btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockOut()">Clock Out</button>
-        </div>
-        <div class=" animate-switch" ng-switch-when="lunch">
-            <button class="pull-left btn btn-success btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="fromLunch()">Back from Lunch</button>
-            <button class="pull-left btn btn-danger btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockOut()">Clock Out</button>
-        </div>
+    <div class=" animate-switch" ng-switch-when="off">
+        <button class="pull-left btn btn-primary btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()">Clock In</button>
+    </div>
+    <div class=" animate-switch" ng-switch-when="working">
+        <button class="pull-left btn btn-warning btn-lg" ng-class="{'disabled': AJAXLoading}" ng-show="!userLunch" ng-click="toLunch()">Go to Lunch</button>
+        <button class="pull-left btn btn-danger btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockOut()">Clock Out</button>
+    </div>
+    <div class=" animate-switch" ng-switch-when="lunch">
+        <button class="pull-left btn btn-success btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="fromLunch()">Back from Lunch</button>
+    </div>
     <span class="pull-left alert alert-danger animate-switch" ng-switch-default>Your clock-in isn't consistent, please contact support</span>
     </div>
 </div>
-<div class="col-sm-3 text-center" style="margin-top: 50px;">
+<div class="col-sm-6 text-center" style="margin-top: 50px;">
     <strong>Your Activity Log</strong>
     <div class="table-responsive">
+        <input type="search" class="form-control" ng-model="query" placeholder="search for date in format YYYY-mm-dd, or search for event e.g. lunch">
         <table class="table table-bordered table-hover table-condensed">
             <thead>
             <tr>
@@ -32,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat-start="logEntries in userLogArray | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:'logArraySort':true">
+            <tr ng-repeat-start="logEntries in userLogArray | filter:query | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:logArraySort:true">
                 <td rowspan="{{logEntries.length+1}}">{{logEntries[0].datetime | date: 'EEE, M/d/yy'}}</td>
             </tr>
             <tr ng-repeat-end ng-repeat="entry in logEntries | orderBy:'datetime':true" class="clickable" ng-class="{'active': entry.selected}" ng-click="selectLog(entry)">
@@ -51,9 +55,6 @@
             Next
         </button>
     </div>
-</div>
-<div class="col-sm-3" style="margin-top: 50px;">
-<iframe class="animate-if" ng-if="selectedLog.locUrl" frameborder="1" height="250px" width="100%" ng-src="{{selectedLog.locUrl}}"></iframe>
 </div>
 <div class="col-sm-3">
     <div class="well sidebar">

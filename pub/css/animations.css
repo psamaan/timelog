@@ -1,4 +1,23 @@
 
+.my-alerts.animate-if.ng-enter, .my-alerts.animate-if.ng-leave {
+
+    -webkit-transition:all ease-in-out 1s;
+    -moz-transition:all ease-in-out 1s;
+    -ms-transition:all ease-in-out 1s;
+    -o-transition:all ease-in-out 1s;
+    transition:all ease-in-out 1s;
+}
+
+.my-alerts.animate-if.ng-enter,
+.my-alerts.animate-if.ng-leave.ng-leave-active {
+    top:-103%;
+}
+
+.my-alerts.animate-if.ng-leave,
+.my-alerts.animate-if.ng-enter.ng-enter-active {
+    top:-3%;
+}
+
 .animate-if.ng-enter, .animate-if.ng-leave {
 
     -webkit-transition:all ease-in-out 0.6s;

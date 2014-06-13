@@ -6,8 +6,8 @@
 var generatePassword = require('password-generator');
 var LocalStrategy = require('passport-local').Strategy;
 var sendgrid  = require('sendgrid')(
-        process.env.SENDGRID_USERNAME || 'app25228932@heroku.com', // TODO remove sendgrid username and password
-        process.env.SENDGRID_PASSWORD || 'rwgdkc4i'
+        process.env.SENDGRID_USERNAME,
+        process.env.SENDGRID_PASSWORD
 );
 
 // load up the user model

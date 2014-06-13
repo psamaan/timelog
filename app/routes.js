@@ -207,7 +207,7 @@ module.exports = function(app, passport, sendgrid, configs) {
     // =====================================
     // FETCH-OWN-LOG ===========================
     // =====================================
-    app.get('/user-log', isLoggedIn, function(req,res){
+    app.get('/user-log', isLoggedIn, function(req,res){ //TODO change to by-month query
         Log.find({'eid':req.user._id}).limit(120).exec(function (err, docs) {
             res.status(200).send(docs);
         });

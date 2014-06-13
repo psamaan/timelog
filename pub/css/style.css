@@ -20,11 +20,19 @@ body 		{
     max-width: 100%;
     border:0;
     margin-top: 50px;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .clickable {
     cursor: pointer;
+}
+
+.footer {
+    color: #d6d6d6;
+    margin-top: 15px;
+    padding: 19px 20px 20px;
+    text-align: center;
+    border-top: 1px solid #e5e5e5;
 }
 
 .my-alerts {
