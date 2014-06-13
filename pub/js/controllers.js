@@ -13,25 +13,47 @@ timelogControllers.filter('startFrom', function() {
     };
 });
 
-timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$rootScope', '$sce',
-    function PersonalPageController($scope, $http, $rootScope, $sce) {
+timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$rootScope', '$sce', '$filter',
+    function PersonalPageController($scope, $http, $rootScope, $sce, $filter) {
 
         $scope.loc ={};
         $scope.forms = {};
         $scope.changePass = false;
+        $scope.userLogArray = [];
         $scope.userLog = {};
         $rootScope.selectedLog = {};
-
         $scope.currentPage = 0;
-        $scope.pageSize = 5;
+        $scope.pageSize = 3;
+
+        $scope.logArraySort = function(logEntries) {
+            return logEntries[0].datetime;
+        };
 
         $scope.numberOfPages=function(){
-            return Math.ceil($scope.userLog.length/$scope.pageSize);
+            return Math.ceil($scope.userLogArray.length/$scope.pageSize);
         };
+
 
         $scope.refreshLog = function(){
             $http.get('user-log').success(function(docs){
-                $scope.userLog = docs;
+                var days = Object.keys($scope.userLog);
+                for (var j = 0; j <= days.length; j++) {
+                    for (var i = 0; i< docs.length; i++) {
+                        var found = false;
+                        var logDay = $filter('date')(docs[i].datetime, "shortDate");
+                        if (!$scope.userLog[logDay]) $scope.userLog[logDay] = [];
+                        else for (var k = 0; k < $scope.userLog[logDay].length; k++) if ($scope.userLog[logDay][k]._id === docs[i]._id) found = true;
+                        if (!found) $scope.userLog[logDay].push(docs[i]);
+                    }
+                }
+                for (var daysLog in $scope.userLog) {
+                    console.log(daysLog);
+                    var foundArray = false;
+                    for (var l = 0 ; l < $scope.userLogArray.length; l++) if ($scope.userLogArray[l][0].datetime === $scope.userLog[daysLog][0].datetime) foundArray = true;
+                    if (!foundArray) $scope.userLogArray.push($scope.userLog[daysLog]);
+                }
+                console.log($scope.userLog);
+                console.log($scope.userLogArray);
             });
         };
 
@@ -41,7 +63,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                 $rootScope.selectedLog = {};
             }
             else {
-                for (var i = 0; i < $scope.userLog.length; i++) $scope.userLog[i].selected = false;
+                for (var log in $scope.userLog) for (var j = 0; j < $scope.userLog[log].length; j++) $scope.userLog[log][j].selected = false;
                 logEntry.selected = true;
                 $rootScope.selectedLog.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + logEntry.loc.lat + "%2C" + logEntry.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
             }

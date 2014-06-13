@@ -26,14 +26,18 @@
         <table class="table table-bordered table-hover table-condensed">
             <thead>
             <tr>
+                <th>day</th>
                 <th>action</th>
-                <th>date/time</th>
+                <th>time</th>
             </tr>
             </thead>
             <tbody>
-            <tr class="clickable" ng-class="{'info': logEntry.selected}" ng-repeat="logEntry in userLog | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:'datetime':true" ng-click="selectLog(logEntry)">
-                <td>{{logEntry.action}}</td>
-                <td>{{logEntry.datetime | date: 'medium'}}</td>
+            <tr ng-repeat-start="logEntries in userLogArray | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:'logArraySort':true">
+                <td rowspan="{{logEntries.length+1}}">{{logEntries[0].datetime | date: 'EEE, M/d/yy'}}</td>
+            </tr>
+            <tr ng-repeat-end ng-repeat="entry in logEntries | orderBy:'datetime':true" class="clickable" ng-class="{'active': entry.selected}" ng-click="selectLog(entry)">
+                <td>{{entry.action}}</td>
+                <td>{{entry.datetime | date: 'shortTime'}}</td>
             </tr>
             </tbody>
         </table>
@@ -43,7 +47,7 @@
             Previous
         </button>
         {{currentPage+1}}/{{numberOfPages()}}
-        <button class="btn btn-sm" ng-disabled="currentPage >= userLog.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+        <button class="btn btn-sm" ng-disabled="currentPage >= userLogArray.length/pageSize - 1" ng-click="currentPage=currentPage+1">
             Next
         </button>
     </div>
