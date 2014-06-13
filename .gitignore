@@ -20,6 +20,7 @@ coverage
 build/Release
 
 # Dependency directory
+<<<<<<< HEAD
 # Commenting this out is preferred by some people, see
 # https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
@@ -29,3 +30,8 @@ node_modules
 
 #Webstorm idea directory
 .idea
+=======
+# Deployed apps should consider commenting this line out:
+# see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
+node_modules
+>>>>>>> de01ecc64fbfa26ec4114b82964572d2147ced3a
