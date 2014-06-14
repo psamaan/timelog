@@ -40,9 +40,11 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         };
 
         $scope.refreshLog = function(){ //TODO simplify this, no real need for duplicate log data structure
+            $rootScope.AJAXLoading = true;
             $scope.userLog = {};
             $scope.userLogArray = [];
             $http.get('user-log?start='+$scope.startDate+'&end='+$scope.endDate).success(function(docs){
+                $rootScope.AJAXLoading = false;
                 var days = Object.keys($scope.userLog);
                 for (var j = 0; j <= days.length; j++) {
                     for (var i = 0; i< docs.length; i++) {
