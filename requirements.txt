@@ -1,5 +1,8 @@
-TODO Pro-rated increments of vacation/sick day credit every other friday
+TODO Profile page to contain hours worked per day and week, plus available vacation credit
+TODO calculations for worked day and absence and so on
+TODO Admin page
+
+TODO Sick Day flow
 TODO Vacation request flow
-TODO Sick Day notification flow
 TODO absence/neglect comment and manager review request
 TODO managers can change login/logout time on review request, shows signed and highlighted

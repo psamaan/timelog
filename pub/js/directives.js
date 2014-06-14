@@ -40,7 +40,7 @@ timelogDirectives.directive('equals', function() {
 timelogDirectives.directive('alert', function($interval, $timeout, $rootScope){
     return {
         restrict: 'E',
-        template: '<div class="alert animate-if text-center" ng-class="alertMessage[0].class" ng-show="alertMessage[0].text">' + '{{alertMessage[0].text}}' + '</div>',
+        template: '<div class="alert my-alerts animate-if text-center col-sm-4" ng-class="alertMessage[0].class" ng-if="alertMessage[0].text">' + '{{alertMessage[0].text}}' + '</div>',
         link: function (scope) {
             var remover = $interval(function(){if (typeof($rootScope.alertMessage[0])!== 'undefined') $timeout(function() {$rootScope.alertMessage.shift();},2000);},3000);
         }

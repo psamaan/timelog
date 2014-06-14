@@ -13,8 +13,8 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var sendgrid  = require('sendgrid')(
-        process.env.SENDGRID_USERNAME || 'app25228932@heroku.com', // TODO remove sendgrid username and password
-        process.env.SENDGRID_PASSWORD || 'rwgdkc4i'
+        process.env.SENDGRID_USERNAME,
+        process.env.SENDGRID_PASSWORD
 );
 
 var configs = require('./config/configs.js');
@@ -30,7 +30,7 @@ app.configure(function() {
     'use strict';
 
     // set up our express application
-    app.use(express.logger('dev')); // log every request to the console
+    app.use(express.logger('dev')); // log every request to the console TODO disable dev logging mode
     app.use(express.cookieParser()); // read cookies (needed for auth)
     app.use(express.bodyParser()); // get information from html forms
     app.set('view engine', 'ejs'); // set up ejs for templates
