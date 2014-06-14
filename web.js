@@ -17,10 +17,9 @@ var sendgrid  = require('sendgrid')(
         process.env.SENDGRID_PASSWORD
 );
 
-var configDB = process.env.MONGOHQ_URL;
 
 // configuration ===============================================================
-mongoose.connect(configDB.url); // connect to our database
+mongoose.connect(process.env.MONGOHQ_URL); // connect to our database
 
 require('./config/passport')(passport); // pass passport for configuration
 
