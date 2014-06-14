@@ -8,7 +8,7 @@ var User = require('../app/models/user');
 var Log = require('../app/models/log');
 
 // app/routes.js
-module.exports = function(app, passport, sendgrid, configs) {
+module.exports = function(app, passport, sendgrid) {
 
     'use strict';
 

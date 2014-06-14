@@ -35,5 +35,3 @@ node_modules
 # see https://npmjs.org/doc/faq.html#Should-I-check-my-node_modules-folder-into-git
 node_modules
 >>>>>>> de01ecc64fbfa26ec4114b82964572d2147ced3a
-
-config/configs.js
