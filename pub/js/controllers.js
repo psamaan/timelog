@@ -28,6 +28,9 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         $scope.currentPage = 0;
         $scope.pageSize = 3;
 
+        $scope.startDate = new Date(Date.now()-2592000000); //today minus a month in milliseconds
+        $scope.endDate = new Date(Date.now()+60000); //today plus a minute
+
         $scope.logArraySort = function(logEntries) {
             return logEntries[0].datetime;
         };
@@ -37,7 +40,9 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         };
 
         $scope.refreshLog = function(){ //TODO simplify this, no real need for duplicate log data structure
-            $http.get('user-log').success(function(docs){
+            $scope.userLog = {};
+            $scope.userLogArray = [];
+            $http.get('user-log?start='+$scope.startDate+'&end='+$scope.endDate).success(function(docs){
                 var days = Object.keys($scope.userLog);
                 for (var j = 0; j <= days.length; j++) {
                     for (var i = 0; i< docs.length; i++) {

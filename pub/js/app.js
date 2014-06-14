@@ -8,7 +8,8 @@ var timelog = angular.module('timelog', [
     'ngRoute',
     'ngAnimate',
     'timelogControllers',
-    'timelogDirectives'
+    'timelogDirectives',
+    'ngQuickDate'
 ]);
 timelog.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
