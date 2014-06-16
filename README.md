@@ -31,15 +31,15 @@ Client:
         "ngQuickDate": Angular widget for a date picker.
 
 
-This app is still a work in progress, below is what still needs to be done:
+This app is still a work in progress, these are the remaining features that will be added:
 
-TODO Profile page to contain hours worked per day, plus available vacation credit
-TODO calculations and notifications for vacations and absence
-TODO edit users (in addition to add)
-TODO Admin page (to collect reports, adding and editing users... etc.)
+TODO Profile page to contain hours worked per day, plus available vacation credit.
+TODO calculations and notifications for vacations and absence.
+TODO edit users (in addition to add).
+TODO Admin page (to collect reports, adding and editing users... etc).
 
 TODO Manager page to approve vacations and review logs and sick days... etc.
-TODO Sick Day flow
-TODO Vacation request flow
-TODO absence/neglect comment and manager review request
-TODO managers can change login/logout time on review request, shows signed and highlighted
+TODO Sick Day flow.
+TODO Vacation request flow.
+TODO absence/neglect comment and manager review request.
+TODO managers can change login/logout time on review request, shows signed and highlighted.
