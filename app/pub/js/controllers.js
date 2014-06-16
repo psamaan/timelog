@@ -29,7 +29,7 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         $scope.pageSize = 3;
 
         $scope.startDate = new Date(Date.now()-2592000000); //today minus a month in milliseconds
-        $scope.endDate = new Date(Date.now()+60000); //today plus a minute
+        $scope.endDate = new Date(Date.now()+36000000); //today plus 10 hours in milliseconds
 
         $scope.logArraySort = function(logEntries) {
             return logEntries[0].datetime;
@@ -101,8 +101,9 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/clock-in', $scope.loc).success(function(result){
-                            if (result === 'OK') {
+                        $http.post('/clock-in', $scope.loc).success(function(result, status){
+                            if (status === 200) {
+                                $scope.userLunch = result.hadlunch;
                                 $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
@@ -111,7 +112,14 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
                                 $scope.userState = "working";
-                                $scope.userLunch = false;
+                            }
+                            else {
+                                console.log(status);
+                                $rootScope.AJAXLoading = false;
+                                var message = {};
+                                message.class = "alert-danger";
+                                message.text = "An error occured!";
+                                $rootScope.alertMessage.push(message);
                             }
                         });
                     },
@@ -131,8 +139,8 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/clock-out', $scope.loc).success(function(result){
-                            if (result === 'OK') {
+                        $http.post('/clock-out', $scope.loc).success(function(result, status){
+                            if (status === 200) {
                                 $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
@@ -141,6 +149,14 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = false;
                                 $scope.userState = "off";
+                            }
+                            else {
+                                console.log(status);
+                                $rootScope.AJAXLoading = false;
+                                var message = {};
+                                message.class = "alert-danger";
+                                message.text = "An error occured!";
+                                $rootScope.alertMessage.push(message);
                             }
                         });
                     },
@@ -160,8 +176,8 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/lunch-out', $scope.loc).success(function(result){
-                            if (result === 'OK') {
+                        $http.post('/lunch-out', $scope.loc).success(function(result, status){
+                            if (status === 200) {
                                 $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
@@ -170,6 +186,14 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
                                 $scope.userState = "lunch";
+                            }
+                            else {
+                                console.log(status);
+                                $rootScope.AJAXLoading = false;
+                                var message = {};
+                                message.class = "alert-danger";
+                                message.text = "An error occured!";
+                                $rootScope.alertMessage.push(message);
                             }
                         });
                     },
@@ -189,8 +213,8 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/lunch-in', $scope.loc).success(function(result){
-                            if (result === 'OK') {
+                        $http.post('/lunch-in', $scope.loc).success(function(result, status){
+                            if (status === 200) {
                                 $scope.refreshLog();
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
@@ -200,6 +224,14 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $scope.isClockedIn = true;
                                 $scope.userState = "working";
                                 $scope.userLunch = true;
+                            }
+                            else {
+                                console.log(status);
+                                $rootScope.AJAXLoading = false;
+                                var message = {};
+                                message.class = "alert-danger";
+                                message.text = "An error occured!";
+                                $rootScope.alertMessage.push(message);
                             }
                         });
                     },

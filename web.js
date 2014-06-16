@@ -21,7 +21,7 @@ var sendgrid  = require('sendgrid')(
 // configuration ===============================================================
 mongoose.connect(process.env.MONGOHQ_URL); // connect to our database
 
-require('./config/passport')(passport); // pass passport for configuration
+require('./app/passport')(passport); // pass passport for configuration
 
 app.configure(function() {
 
@@ -45,7 +45,7 @@ app.configure(function() {
 require('./app/routes.js')(app, passport, sendgrid); // load our routes and pass in our app, passport, and configurations
 
 // pub serving ==============================================================
-app.use(express.static(__dirname + '/pub'));
+app.use(express.static(__dirname + '/app/pub'));
 
 // launch ======================================================================
 app.listen(port);

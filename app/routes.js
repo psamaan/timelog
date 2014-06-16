@@ -4,8 +4,8 @@
 
 
 // load up the user and log models
-var User = require('../app/models/user');
-var Log = require('../app/models/log');
+var User = require('./models/user');
+var Log = require('./models/log');
 
 // app/routes.js
 module.exports = function(app, passport, sendgrid) {
@@ -131,11 +131,19 @@ module.exports = function(app, passport, sendgrid) {
             if (err) throw err;
             User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
                 user.state = "working";
-                user.hadlunch = false;
-                user.save(function(err) {
-                    if (err) throw err;
-                    //all worked, send OK
-                    res.status(200).send('OK');
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth();
+                var yyyy = today.getFullYear();
+                var todayStart = new Date(yyyy, mm, dd);
+                Log.count({ 'action':"clock in", 'eid': user._id, 'datetime': {$gte: todayStart}}, function (err, count){
+                    console.log(count);
+                    if (count === 1) user.hadlunch = false;
+                    user.save(function(err) {
+                        if (err) throw err;
+                        //all worked, send OK
+                        res.status(200).send(user);
+                    });
                 });
             });
         });

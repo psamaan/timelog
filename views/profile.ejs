@@ -26,7 +26,7 @@
 <div class="col-sm-6 text-center" style="margin-top: 50px;">
     <h3>Your Activity Log</h3>
     <div class="table-responsive">
-        <div class="lead">from <quick-datepicker ng-model='startDate'></quick-datepicker> to <quick-datepicker ng-model='endDate'></quick-datepicker><button class="btn btn-default btn-sm" style="margin-left:5em;" ng-click="refreshLog()">go</button></div>
+        <div class="lead text-center">from <quick-datepicker class="center-block" ng-model='startDate'></quick-datepicker> to  <quick-datepicker class="center-block" ng-model='endDate'></quick-datepicker> <button class="btn btn-default btn-sm" ng-click="refreshLog()">go</button></div>
         <input type="search" class="form-control" ng-model="query" placeholder="search for date in format YYYY-mm-dd, or search for event e.g. lunch">
         <table class="table table-bordered table-hover table-condensed">
             <thead>
