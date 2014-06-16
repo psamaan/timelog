@@ -31,7 +31,10 @@ Client:
         "ngQuickDate": Angular widget for a date picker.
 
 
-This app is still a work in progress, these are the remaining features that will be added:
+This app is still a work in progress.
+
+Features that will be added:
+----------------------------
 
 TODO Profile page to contain hours worked per day, plus available vacation credit.
 TODO calculations and notifications for vacations and absence.
