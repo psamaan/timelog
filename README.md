@@ -37,12 +37,19 @@ Features that will be added:
 ----------------------------
 
 TODO Profile page to contain hours worked per day, plus available vacation credit.
+
 TODO calculations and notifications for vacations and absence.
+
 TODO edit users (in addition to add).
+
 TODO Admin page (to collect reports, adding and editing users... etc).
 
 TODO Manager page to approve vacations and review logs and sick days... etc.
+
 TODO Sick Day flow.
+
 TODO Vacation request flow.
+
 TODO absence/neglect comment and manager review request.
+
 TODO managers can change login/logout time on review request, shows signed and highlighted.
