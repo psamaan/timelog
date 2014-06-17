@@ -36,9 +36,9 @@ This app is still a work in progress.
 Features that will be added:
 ----------------------------
 
-TODO calculations, presentation and notifications for vacations and absence.
+TODO Calculations, presentation and notifications for vacations and absence.
 
-TODO edit users (in addition to add).
+TODO Edit users (in addition to add which is already implemented).
 
 TODO Admin page (to collect reports, adding and editing users... etc).
 
