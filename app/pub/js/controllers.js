@@ -23,43 +23,45 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         // TODO refactor log handler code to a service, and log display html to a template to include.
 
         $scope.userLogArray = [];
-        $scope.userLog = {};
         $rootScope.selectedLog = {};
         $scope.currentPage = 0;
         $scope.pageSize = 3;
 
         $scope.startDate = new Date(Date.now()-2592000000); //today minus a month in milliseconds
         $scope.endDate = new Date(Date.now()+36000000); //today plus 10 hours in milliseconds
+        $scope.workedHours = 0;
+        $scope.lunchminutes = 0;
+        $scope.overHours = 0;
 
-        $scope.logArraySort = function(logEntries) {
-            return logEntries[0].datetime;
+        $scope.refreshState = function(returnedUser) {
+            $scope.userLunch = returnedUser.hadlunch;
+            $scope.userState = returnedUser.state;
         };
 
         $scope.numberOfPages=function(){
             return Math.ceil($scope.userLogArray.length/$scope.pageSize);
         };
 
-        $scope.refreshLog = function(){ //TODO simplify this, no real need for duplicate log data structure
+        $scope.refreshLog = function(){
             $rootScope.AJAXLoading = true;
-            $scope.userLog = {};
             $scope.userLogArray = [];
-            $http.get('user-log?start='+$scope.startDate+'&end='+$scope.endDate).success(function(docs){
-                $rootScope.AJAXLoading = false;
-                var days = Object.keys($scope.userLog);
-                for (var j = 0; j <= days.length; j++) {
-                    for (var i = 0; i< docs.length; i++) {
-                        var found = false;
-                        var logDay = $filter('date')(docs[i].datetime, "shortDate");
-                        if (!$scope.userLog[logDay]) $scope.userLog[logDay] = [];
-                        else for (var k = 0; k < $scope.userLog[logDay].length; k++) if ($scope.userLog[logDay][k]._id === docs[i]._id) found = true;
-                        if (!found) $scope.userLog[logDay].push(docs[i]);
+                $http.get('user-log?start='+$scope.startDate+'&end='+$scope.endDate).success(function(docs){
+                if (docs.length>0) {
+                    var today = new Date();
+                    var todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                    var todayIndex = -1;
+                    for (var t = 0; t < docs.length; t++) {
+                        var tempDate = new Date(docs[t].dayDate);
+                        if (tempDate > todayStart) todayIndex = t;
                     }
+                    if (todayIndex >=0) {
+                        $scope.workedHours = docs[todayIndex].worked_minutes/60;
+                        $scope.lunchminutes = docs[todayIndex].lunch_minutes;
+                        $scope.overHours = docs[todayIndex].overtime_minutes/60;
+                    }
+                    $scope.userLogArray = docs;
                 }
-                for (var daysLog in $scope.userLog) {
-                    var foundArray = false;
-                    for (var l = 0 ; l < $scope.userLogArray.length; l++) if ($scope.userLogArray[l][0].datetime === $scope.userLog[daysLog][0].datetime) foundArray = true;
-                    if (!foundArray) $scope.userLogArray.push($scope.userLog[daysLog]);
-                }
+                $rootScope.AJAXLoading = false;
             });
         };
 
@@ -69,7 +71,11 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                 $rootScope.selectedLog = {};
             }
             else {
-                for (var log in $scope.userLog) for (var j = 0; j < $scope.userLog[log].length; j++) $scope.userLog[log][j].selected = false;
+                for (var i = 0; i < $scope.userLogArray.length; i++) {
+                    for (var j = 0; j < $scope.userLogArray[i].logEntries.length; j++) {
+                        $scope.userLogArray[i].logEntries[j].selected = false;
+                    }
+                }
                 logEntry.selected = true;
                 $rootScope.selectedLog.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + logEntry.loc.lat + "%2C" + logEntry.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
             }
@@ -101,17 +107,16 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/clock-in', $scope.loc).success(function(result, status){
+                        $http.post('/clock-in', $scope.loc).success(function(user, status){
                             if (status === 200) {
-                                $scope.userLunch = result.hadlunch;
                                 $scope.refreshLog();
+                                $scope.refreshState(user);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
                                 message.text = "You've clocked in!";
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
-                                $scope.userState = "working";
                             }
                             else {
                                 console.log(status);
@@ -139,16 +144,16 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/clock-out', $scope.loc).success(function(result, status){
+                        $http.post('/clock-out', $scope.loc).success(function(user, status){
                             if (status === 200) {
                                 $scope.refreshLog();
+                                $scope.refreshState(user);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
                                 message.text = "You've clocked out!";
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = false;
-                                $scope.userState = "off";
                             }
                             else {
                                 console.log(status);
@@ -176,23 +181,23 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/lunch-out', $scope.loc).success(function(result, status){
+                        $http.post('/lunch-out', $scope.loc).success(function(user, status){
                             if (status === 200) {
                                 $scope.refreshLog();
+                                $scope.refreshState(user);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
                                 message.text = "You've gone out to lunch!";
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
-                                $scope.userState = "lunch";
                             }
                             else {
                                 console.log(status);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-danger";
-                                message.text = "An error occured!";
+                                message.text = result;
                                 $rootScope.alertMessage.push(message);
                             }
                         });
@@ -213,17 +218,16 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                         $scope.loc.lat = p.coords.latitude.toFixed(2);
                         $scope.loc.lon = p.coords.longitude.toFixed(2);
                         $scope.locUrl = $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q=" + $scope.loc.lat + "%2C" + $scope.loc.lon + "&key=AIzaSyD7Xn1-U_EPH8o0FUyWzGSyTaHWhYyT1hE");
-                        $http.post('/lunch-in', $scope.loc).success(function(result, status){
+                        $http.post('/lunch-in', $scope.loc).success(function(user, status){
                             if (status === 200) {
                                 $scope.refreshLog();
+                                $scope.refreshState(user);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-success";
                                 message.text = "You've come back from lunch!";
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
-                                $scope.userState = "working";
-                                $scope.userLunch = true;
                             }
                             else {
                                 console.log(status);

@@ -36,9 +36,7 @@ This app is still a work in progress.
 Features that will be added:
 ----------------------------
 
-TODO Profile page to contain hours worked per day, plus available vacation credit.
-
-TODO calculations and notifications for vacations and absence.
+TODO calculations, presentation and notifications for vacations and absence.
 
 TODO edit users (in addition to add).
 

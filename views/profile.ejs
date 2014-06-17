@@ -27,7 +27,7 @@
     <h3>Your Activity Log</h3>
     <div class="table-responsive">
         <div class="lead text-center">from <quick-datepicker class="center-block" ng-model='startDate'></quick-datepicker> to  <quick-datepicker class="center-block" ng-model='endDate'></quick-datepicker> <button class="btn btn-default btn-sm" ng-click="refreshLog()">go</button></div>
-        <input type="search" class="form-control" ng-model="query" placeholder="search for date in format YYYY-mm-dd, or search for event e.g. lunch">
+        <input type="search" class="form-control" ng-model="query" placeholder="search for date in format YYYY-mm-dd">
         <table class="table table-bordered table-hover table-condensed">
             <thead>
             <tr>
@@ -37,10 +37,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat-start="logEntries in userLogArray | filter:query | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:logArraySort:true">
-                <td rowspan="{{logEntries.length+1}}">{{logEntries[0].datetime | date: 'EEE, M/d/yy'}}</td>
+            <tr ng-repeat-start="logDays in userLogArray | filter:query | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:'dayDate':true">
+                <td rowspan="{{logDays.logEntries.length+1}}">{{logDays.dayDate | date: 'EEE, M/d/yy'}}</td>
             </tr>
-            <tr ng-repeat-end ng-repeat="entry in logEntries | orderBy:'datetime':true" class="clickable" ng-class="{'active': entry.selected}" ng-click="selectLog(entry)">
+            <tr ng-repeat-end ng-repeat="entry in logDays.logEntries | orderBy:'datetime':true" class="clickable" ng-class="{'active': entry.selected}" ng-click="selectLog(entry)">
                 <td>{{entry.action}}</td>
                 <td>{{entry.datetime | date: 'shortTime'}}</td>
             </tr>
@@ -60,7 +60,14 @@
 <div class="col-sm-3">
     <div class="well sidebar">
         <h3><span class="fa fa-user"></span> <%= user.fullname %></h3>
-        <div class="bs-callout text-center lead" ng-class="{'bs-callout-info': userState === 'working','bs-callout-warning':userState === 'lunch','bs-callout-danger':userState === 'sick','bs-callout-danger':userState === 'off'}">{{userState}}</div><br>
+        <div class="bs-callout text-center lead" ng-class="{'bs-callout-info': userState === 'working','bs-callout-warning':userState === 'lunch','bs-callout-danger':userState === 'sick','bs-callout-danger':userState === 'off'}"><strong>{{userState}}</strong></div>
+        <div ng-show="workedHours" class="bs-callout text-center lead" ng-class="{'bs-callout-info': workedHours > 8, 'bs-callout-danger': workedHours < 8}"> worked {{workedHours | number:2}} hours today</div>
+        <div ng-show="lunchminutes" class="bs-callout text-center lead" ng-class="{'bs-callout-info': (lunchminutes <= 60 && lunchminutes >= 30), 'bs-callout-warning': (lunchminutes > 60 || lunchminutes < 30)}"> had a {{lunchminutes | number:0}} minute lunch today</div>
+        <div ng-show="overHours" class="bs-callout bs-callout-info text-center lead"> worked {{overHours | number:2}} hours overtime today</div><br>
+        </div>
+    </div>
+<div class="col-sm-3">
+    <div class="well sidebar">
         <p>
             <strong>username</strong>: <%= user.credentials.email %><br><br>
             <a class="clickable" ng-click="changePass=!changePass" ng-show="!changePass">Change Password</a>

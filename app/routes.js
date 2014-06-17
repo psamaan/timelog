@@ -122,101 +122,173 @@ module.exports = function(app, passport, sendgrid) {
     // CLOCK-IN ============================
     // =====================================
     app.post('/clock-in', isLoggedIn, function(req, res){
-        var clockLog = new Log();
-        clockLog.eid = req.user._id;
-        clockLog.name = req.user.fullname;
-        clockLog.action = "clock in";
-        clockLog.loc = req.body;
-        clockLog.save(function(err) {
-            if (err) throw err;
-            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
-                user.state = "working";
-                var today = new Date();
-                var dd = today.getDate();
-                var mm = today.getMonth();
-                var yyyy = today.getFullYear();
-                var todayStart = new Date(yyyy, mm, dd);
-                Log.count({ 'action':"clock in", 'eid': user._id, 'datetime': {$gte: todayStart}}, function (err, count){
-                    console.log(count);
-                    if (count === 1) user.hadlunch = false;
-                    user.save(function(err) {
-                        if (err) throw err;
-                        //all worked, send OK
-                        res.status(200).send(user);
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth();
+        var yyyy = today.getFullYear();
+        var todayStart = new Date(yyyy, mm, dd);
+        Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog){
+            if (dayLog) {
+                var clockLog = {};
+                clockLog.action = "clock in";
+                clockLog.loc = req.body;
+                dayLog.logEntries.push(clockLog);
+                dayLog.save(function(err) {
+                    if (err) throw err;
+                    User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                        user.state = "working";
+                            user.save(function(err) {
+                                if (err) throw err;
+                                //all worked, send changed user
+                                res.status(200).send(user);
+                            });
                     });
                 });
-            });
+            }
+            else {
+                var clockLogNew = {};
+                clockLogNew.action = "clock in";
+                clockLogNew.loc = req.body;
+                var clockDayLog = new Log();
+                clockDayLog.eid = req.user._id;
+                clockDayLog.name = req.user.fullname;
+                clockDayLog.logEntries = [];
+                clockDayLog.logEntries.push(clockLogNew);
+                clockDayLog.save(function(err) {
+                    if (err) throw err;
+                    User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                        user.state = "working";
+                        user.hadlunch = false;
+                        user.save(function(err) {
+                            if (err) throw err;
+                            //all worked, send changed user
+                            res.status(200).send(user);
+                        });
+                    });
+                });
+            }
         });
+
     });
+
     // =====================================
     // LUNCH-OUT ===========================
     // =====================================
     app.post('/lunch-out', isLoggedIn, function(req, res){
-        var clockLog = new Log();
-        clockLog.eid = req.user._id;
-        clockLog.name = req.user.fullname;
-        clockLog.action = "out to lunch";
-        clockLog.loc = req.body;
-        clockLog.save(function(err) {
-            if (err) throw err;
-            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
-                user.state = "lunch";
-                user.save(function(err) {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth();
+        var yyyy = today.getFullYear();
+        var todayStart = new Date(yyyy, mm, dd);
+        Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog) {
+            if (dayLog) {
+                var clockLog = {};
+                clockLog.action = "out to lunch";
+                clockLog.loc = req.body;
+                dayLog.logEntries.push(clockLog);
+                dayLog.save(function(err) {
                     if (err) throw err;
-                    //all worked, send OK
-                    res.status(200).send('OK');
+                    User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                        user.state = "lunch";
+                        user.save(function(err) {
+                            if (err) throw err;
+                            //all worked, send changed user
+                            res.status(200).send(user);
+                        });
+                    });
                 });
-            });
+            }
+            else res.status(403).send('No matching clock-in found today. Please contact support.');
         });
     });
+
     // =====================================
     // LUNCH-IN ============================
     // =====================================
     app.post('/lunch-in', isLoggedIn, function(req, res){
-        var clockLog = new Log();
-        clockLog.eid = req.user._id;
-        clockLog.name = req.user.fullname;
-        clockLog.action = "back from lunch";
-        clockLog.loc = req.body;
-        clockLog.save(function(err) {
-            if (err) throw err;
-            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
-                user.state = "working";
-                user.hadlunch = true;
-                user.save(function(err) {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth();
+        var yyyy = today.getFullYear();
+        var todayStart = new Date(yyyy, mm, dd);
+        Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog) {
+            if (dayLog) {
+                var lunchIndex = -1;
+                for (var i = dayLog.logEntries.length-1; i>=0 ; i--) {
+                    if (dayLog.logEntries[i].action === "out to lunch") {
+                        lunchIndex = i;
+                        break;
+                    }
+                }
+                if (lunchIndex===-1) res.status(403).send('No matching lunch start found today. Please contact support.');
+                var clockLog = {};
+                clockLog.action = "back from lunch";
+                clockLog.loc = req.body;
+                dayLog.logEntries.push(clockLog);
+                dayLog.lunch_minutes += (Date.now() - dayLog.logEntries[lunchIndex].datetime)/60000;
+                dayLog.save(function(err) {
                     if (err) throw err;
-                    //all worked, send OK
-                    res.status(200).send('OK');
+                    User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
+                        user.state = "working";
+                        user.hadlunch = true;
+                        user.save(function(err) {
+                            if (err) throw err;
+                            //all worked, send changed user
+                            res.status(200).send(user);
+                        });
+                    });
                 });
-            });
+            }
+            else res.status(403).send('No matching clock-in found today. Please contact support.');
         });
     });
+
     // =====================================
     // CLOCK-OUT ===========================
     // =====================================
     app.post('/clock-out', isLoggedIn, function(req, res){
-        var clockLog = new Log();
-        clockLog.eid = req.user._id;
-        clockLog.name = req.user.fullname;
-        clockLog.action = "clock out";
-        clockLog.loc = req.body;
-        clockLog.save(function(err) {
-            if (err) throw err;
-            User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
-                user.state = "off";
-                user.save(function(err) {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth();
+        var yyyy = today.getFullYear();
+        var todayStart = new Date(yyyy, mm, dd);
+        Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog) {
+            if (dayLog) {
+                var clockInIndex = -1;
+                for (var i = dayLog.logEntries.length-1; i>=0 ; i--) {
+                    if (dayLog.logEntries[i].action === "clock in") {
+                        clockInIndex = i;
+                        break;
+                    }
+                }
+                var clockLog = {};
+                clockLog.action = "clock out";
+                clockLog.loc = req.body;
+                dayLog.logEntries.push(clockLog);
+                dayLog.worked_minutes += ((Date.now() - dayLog.logEntries[clockInIndex].datetime)/60000 - dayLog.lunch_minutes);
+                User.findOne({ 'credentials.email': req.user.credentials.email }, function (err, user) {
                     if (err) throw err;
-                    //all worked, send OK
-                    res.status(200).send('OK');
+                    if (dayLog.worked_minutes > user.hours*60) dayLog.overtime_minutes = dayLog.worked_minutes - user.hours*60;
+                    dayLog.save(function(err) {
+                        if (err) throw err;
+                        user.state = "off";
+                        user.save(function(err) {
+                            if (err) throw err;
+                            //all worked, send changed user
+                            res.status(200).send(user);
+                        });
+                    });
                 });
-            });
+            }
+            else res.status(403).send('No matching clock-in found today. Please contact support.');
         });
     });
+
     // =====================================
     // FETCH-OWN-LOG =======================
     // =====================================
     app.get('/user-log', isLoggedIn, function(req,res){
-        Log.find({'eid':req.user._id, 'datetime':{$gte:req.query.start,$lte:req.query.end}}, function (err, docs) {
+        Log.find({'eid':req.user._id, 'dayDate':{$gte:req.query.start,$lte:req.query.end}}, function (err, docs) {
             res.status(200).send(docs);
         });
     });
