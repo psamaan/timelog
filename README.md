@@ -11,7 +11,7 @@ Libraries and add-ons used:
 Server:
 -------
 
-        "express": Feb app awesomeness for Node.js.
+        "express": Web app awesomeness for Node.js.
         "ejs": Server-side templating.
         "mongoose": ORM for MongoDB, used in DB schema management and easy MongoDB use.
         "passport" and "passport-local": Node.js authentication and authorization.
