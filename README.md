@@ -42,6 +42,8 @@ TODO edit users (in addition to add).
 
 TODO Admin page (to collect reports, adding and editing users... etc).
 
+--------------Release 1 complete, app can be useful at this point -----------
+
 TODO Manager page to approve vacations and review logs and sick days... etc.
 
 TODO Sick Day flow.
