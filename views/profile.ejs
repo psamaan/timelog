@@ -37,7 +37,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat-start="logDays in userLogArray | filter:query | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:'dayDate':true">
+            <tr ng-repeat-start="logDays in userLogArray | filter:query | orderBy:'dayDate':true | startFrom:currentPage*pageSize | limitTo:pageSize">
                 <td rowspan="{{logDays.logEntries.length+1}}">
                     {{logDays.dayDate | date: 'EEE, M/d/yy'}}<br><br>
                     <em>{{logDays.worked_minutes/60 | number:2}} worked hours</em><br>
