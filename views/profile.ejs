@@ -38,7 +38,12 @@
             </thead>
             <tbody>
             <tr ng-repeat-start="logDays in userLogArray | filter:query | startFrom:currentPage*pageSize | limitTo:pageSize | orderBy:'dayDate':true">
-                <td rowspan="{{logDays.logEntries.length+1}}">{{logDays.dayDate | date: 'EEE, M/d/yy'}}</td>
+                <td rowspan="{{logDays.logEntries.length+1}}">
+                    {{logDays.dayDate | date: 'EEE, M/d/yy'}}<br><br>
+                    <em>{{logDays.worked_minutes/60 | number:2}} worked hours</em><br>
+                    <em>{{logDays.lunch_minutes | number:0 }} lunch minutes</em><br>
+                    <em ng-if="logDays.overtime_minutes">{{logDays.overtime_minutes/60 | number:2}} overtime hours</em><br>
+                </td>
             </tr>
             <tr ng-repeat-end ng-repeat="entry in logDays.logEntries | orderBy:'datetime':true" class="clickable" ng-class="{'active': entry.selected}" ng-click="selectLog(entry)">
                 <td>{{entry.action}}</td>

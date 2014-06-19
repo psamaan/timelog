@@ -36,19 +36,19 @@ This app is still a work in progress.
 Features that will be added:
 ----------------------------
 
-TODO Calculations, presentation and notifications for vacations and absence.
-
 TODO Edit users (in addition to add which is already implemented).
 
 TODO Admin page (to collect reports, adding and editing users... etc).
 
 --------------Release 1 complete, app can be useful at this point -----------
 
-TODO Manager page to approve vacations and review logs and sick days... etc.
-
 TODO Sick Day flow.
 
 TODO Vacation request flow.
+
+TODO Calculations, presentation and notifications for vacations and absence.
+
+TODO Manager page to approve vacations and review logs and sick days... etc.
 
 TODO absence/neglect comment and manager review request.
 

@@ -126,7 +126,8 @@ module.exports = function(app, passport, sendgrid) {
         var dd = today.getDate();
         var mm = today.getMonth();
         var yyyy = today.getFullYear();
-        var todayStart = new Date(yyyy, mm, dd);
+        var hh = today.getHours();
+        var todayStart = new Date(yyyy, mm, dd, hh-7);
         Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog){
             if (dayLog) {
                 var clockLog = {};
@@ -179,7 +180,7 @@ module.exports = function(app, passport, sendgrid) {
         var dd = today.getDate();
         var mm = today.getMonth();
         var yyyy = today.getFullYear();
-        var todayStart = new Date(yyyy, mm, dd);
+        var todayStart = new Date(yyyy, mm, dd-7);
         Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog) {
             if (dayLog) {
                 var clockLog = {};
@@ -210,7 +211,7 @@ module.exports = function(app, passport, sendgrid) {
         var dd = today.getDate();
         var mm = today.getMonth();
         var yyyy = today.getFullYear();
-        var todayStart = new Date(yyyy, mm, dd);
+        var todayStart = new Date(yyyy, mm, dd-7);
         Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog) {
             if (dayLog) {
                 var lunchIndex = -1;
@@ -251,7 +252,7 @@ module.exports = function(app, passport, sendgrid) {
         var dd = today.getDate();
         var mm = today.getMonth();
         var yyyy = today.getFullYear();
-        var todayStart = new Date(yyyy, mm, dd);
+        var todayStart = new Date(yyyy, mm, dd-7);
         Log.findOne({'eid': req.user._id, 'dayDate': {$gte: todayStart}}, function(err, dayLog) {
             if (dayLog) {
                 var clockInIndex = -1;
