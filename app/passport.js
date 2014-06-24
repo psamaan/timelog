@@ -78,6 +78,7 @@ module.exports = function(passport) {
                         newUser.days = req.body.days;
                         newUser.vacations = req.body.vacations;
                         newUser.sick = req.body.sick;
+                        newUser.manager = req.body.manager;
 
                         // save the user
                         newUser.save(function(err) {

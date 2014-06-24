@@ -1,16 +1,4 @@
 <!-- views/landing.ejs -->
-<!doctype html>
-<!--suppress HtmlUnknownTarget -->
-<html>
-<head>
-    <title>Timelog | Add User</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"> replacing with theme -->
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css"> <!-- load font awesome -->
-    <link rel="stylesheet" href="./css/bootstrap.css">
-    <link rel="stylesheet" href="./css/style.css">
-</head>
-<body>
 <div class="container">
 
     <div class="col-sm-6 col-sm-offset-3">
@@ -22,7 +10,7 @@
         <div class="alert alert-danger"><%= message %></div>
         <% } %>
 
-        <!-- LOGIN FORM -->
+        <!-- ADD USER FORM -->
         <form action="/add-user" method="post">
             <div class="form-group">
                 <label>Full Name</label>
@@ -77,16 +65,21 @@
                 <input type="number" class="form-control" name="sick" value="12">
             </div>
 
+            <div class="form-group col-sm-4">
+                <label> Manager
+                    <select name="managerTemp" class="form-control" ng-model="managerTemp" ng-options="user.fullname for user in users" required></select>
+                    <input type="hidden" name="manager" value="{{managerTemp._id}}" >
+                </label>
+            </div>
+
             <div class="form-group col-sm-3">
                 <label class="checkbox"> Admin
                     <input type="checkbox" class="checkbox" name="admin">
                 </label>
-             </div>
+            </div>
 
             <button type="submit" class="btn btn-warning btn-lg pull-right">Add</button>
         </form>
 
     </div>
 </div>
-</body>
-</html>

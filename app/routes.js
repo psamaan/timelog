@@ -296,6 +296,21 @@ module.exports = function(app, passport, sendgrid) {
             res.status(200).send(docs);
         });
     });
+    // =====================================
+    // FETCH-USER-LIST =====================
+    // =====================================
+    app.get('/user-list', isLoggedInAdmin, function(req,res){
+        User.find({}, function (err, docs) {
+            var users = [];
+            for (var i = 0; i < docs.length; i++) {
+                var temp = {};
+                temp._id = docs[i]._id;
+                temp.fullname = docs[i].fullname;
+                users.push(temp);
+            }
+            res.status(200).send(users);
+        });
+    });
 
 };
 

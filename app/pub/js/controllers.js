@@ -250,3 +250,13 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
         };
     }]);
 
+timelogControllers.controller('AddUserController', ['$scope', '$http', '$rootScope', '$sce', '$filter',
+    function AddUserController($scope, $http, $rootScope, $sce, $filter) {
+        $scope.managerTemp = {};
+        $scope.manager = {};
+        $http.get('user-list').success(function(result){
+            $scope.users = result;
+        });
+
+    }]);
+
