@@ -118,15 +118,15 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
                             }
-                            else {
+                        })
+                            .error(function(data, status){
                                 console.log(status);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-danger";
-                                message.text = "An error occured!";
+                                message.text = data;
                                 $rootScope.alertMessage.push(message);
-                            }
-                        });
+                            });
                     },
                     function(p){
                         console.log('error='+p.code);
@@ -155,14 +155,14 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = false;
                             }
-                            else {
+                        })
+                            .error(function(data, status){
                                 console.log(status);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-danger";
-                                message.text = "An error occured!";
+                                message.text = data;
                                 $rootScope.alertMessage.push(message);
-                            }
                         });
                     },
                     function(p){
@@ -192,15 +192,15 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
                             }
-                            else {
+                        })
+                            .error(function(data, status){
                                 console.log(status);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-danger";
-                                message.text = result;
+                                message.text = data;
                                 $rootScope.alertMessage.push(message);
-                            }
-                        });
+                            });
                     },
                     function(p){
                         console.log('error='+p.code);
@@ -229,15 +229,15 @@ timelogControllers.controller('PersonalPageController', ['$scope', '$http', '$ro
                                 $rootScope.alertMessage.push(message);
                                 $scope.isClockedIn = true;
                             }
-                            else {
+                        })
+                            .error(function(data, status){
                                 console.log(status);
                                 $rootScope.AJAXLoading = false;
                                 var message = {};
                                 message.class = "alert-danger";
-                                message.text = "An error occured!";
+                                message.text = data;
                                 $rootScope.alertMessage.push(message);
-                            }
-                        });
+                            });
                     },
                     function(p){
                         console.log('error='+p.code);

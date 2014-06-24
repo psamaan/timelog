@@ -19,6 +19,7 @@ Server:
         "sendgrid": Sending emails to users (from Heroku add-on).
         "bcrypt-nodejs": Hashing and encryption of passwords.
         "password-generator": Random temporary password generation.
+        "node-schedule": For scheduling tasks in Node.
         
 Client:
 -------
