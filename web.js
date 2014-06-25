@@ -42,7 +42,7 @@ app.configure(function() {
 });
 
 // tasks ======================================================================
-require('.app/tasks.js')();
+require('./app/tasks.js')();
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport, sendgrid); // load our routes and pass in our app, passport, and sendgrid modules
