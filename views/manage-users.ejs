@@ -3,7 +3,7 @@
 
     <div class="col-sm-6 col-sm-offset-3">
 
-        <h1><span class="fa fa-sign-in"></span> Add User</h1>
+        <h1><span class="fa fa-sign-in clickable pulse" ng-click="adding=!adding;"></span> Add User</h1>
 
         <!-- show any messages that come back with authentication -->
         <% if (message.length > 0) { %>
@@ -11,7 +11,7 @@
         <% } %>
 
         <!-- ADD USER FORM -->
-        <form action="/add-user" method="post">
+        <form class="animate-if" ng-if="adding" action="/add-user" method="post">
             <div class="form-group">
                 <label>Full Name</label>
                 <input type="text" class="form-control" name="fullname">

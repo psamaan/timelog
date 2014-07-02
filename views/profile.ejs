@@ -9,7 +9,7 @@
         <strong>Location Now</strong>
         <iframe frameborder="1" height="250px" width="100%" ng-src="{{locUrl}}"></iframe>
     </div>
-    <div ng-switch="userState" class="animate-switch-container" style="min-width:250px;">
+    <div ng-switch="userState" class="animate-switch-container" style="min-width:250px; margin-left: 12%; padding-bottom: 10px;">
     <div class=" animate-switch" ng-switch-when="off">
         <button class="pull-left btn btn-primary btn-lg" ng-class="{'disabled': AJAXLoading}" ng-click="clockIn()">Clock In</button>
     </div>
@@ -24,7 +24,7 @@
     </div>
 </div>
 <div class="col-sm-6 text-center" style="margin-top: 50px;">
-    <h3>Your Activity Log</h3>
+    <h3><span class="fa fa-file-o"></span> Your Log</h3>
     <div class="table-responsive">
         <div class="lead text-center">from <quick-datepicker class="center-block" ng-model='startDate'></quick-datepicker> to  <quick-datepicker class="center-block" ng-model='endDate'></quick-datepicker> <button class="btn btn-default btn-sm" ng-click="refreshLog()">go</button></div>
         <input type="search" class="form-control" ng-model="query" placeholder="search for date in format YYYY-mm-dd">
@@ -32,6 +32,7 @@
             <thead>
             <tr>
                 <th class="text-center">day</th>
+                <th class="text-center">comments</th>
                 <th class="text-center">action</th>
                 <th class="text-center">time</th>
             </tr>
@@ -43,6 +44,10 @@
                     <em>{{logDays.worked_minutes/60 | number:2}} worked hours</em><br>
                     <em>{{logDays.lunch_minutes | number:0 }} lunch minutes</em><br>
                     <em ng-if="logDays.overtime_minutes">{{logDays.overtime_minutes/60 | number:2}} overtime hours</em><br>
+                </td>
+                <td rowspan="{{logDays.logEntries.length+1}}" style="max-width: 150px;">
+                    <div ng-show="logDays.eComment"><em>Employee: {{logDays.eComment}}</em><br></div>
+                    <div ng-show="logDays.mComment"><em>Manager: {{logDays.mComment}}</em></div>
                 </td>
             </tr>
             <tr ng-repeat-end ng-repeat="entry in logDays.logEntries | orderBy:'datetime':true" class="clickable" ng-class="{'active': entry.selected}" ng-click="selectLog(entry)">
@@ -64,17 +69,16 @@
 </div>
 <div class="col-sm-3">
     <div class="well sidebar">
-        <h3><span class="fa fa-user"></span> <%= user.fullname %></h3>
+        <h3 class="text-center"><span class="fa fa-user"></span> <%= user.fullname %></h3>
         <div class="bs-callout text-center lead" ng-class="{'bs-callout-info': userState === 'working','bs-callout-warning':userState === 'lunch','bs-callout-danger':userState === 'sick','bs-callout-danger':userState === 'off'}"><strong>{{userState}}</strong></div>
         <div ng-show="workedHours" class="bs-callout text-center lead" ng-class="{'bs-callout-info': workedHours > 8, 'bs-callout-danger': workedHours < 8}"> worked {{workedHours | number:2}} hours today</div>
         <div ng-show="lunchminutes" class="bs-callout text-center lead" ng-class="{'bs-callout-info': (lunchminutes <= 60 && lunchminutes >= 30), 'bs-callout-warning': (lunchminutes > 60 || lunchminutes < 30)}"> had a {{lunchminutes | number:0}} minute lunch today</div>
         <div ng-show="overHours" class="bs-callout bs-callout-info text-center lead"> worked {{overHours | number:2}} hours overtime today</div><br>
-        </div>
-    </div>
-<div class="col-sm-3 pull-right">
-    <div class="well sidebar">
         <p>
             <strong>username</strong>: <%= user.credentials.email %><br><br>
+
+
+
             <a class="clickable" ng-click="changePass=!changePass" ng-show="!changePass">Change Password</a>
 
             <button ng-disabled="forms.changePassword.$invalid" class="btn btn-warning center-block" ng-click="sendPass()" ng-show="changePass">Save</button>
@@ -91,9 +95,20 @@
                 <label>Confirm New Password</label>
                 <input type="password" class="form-control" name="confirmationPassword" ng-model="forms.changePassword.passconfirm" equals="{{forms.changePassword.pass}}" required>
             </div>
-
             <div class="alert-danger alert" ng-show="forms.changePassword.confirmationPassword.$error.equals">
                 The password and confirm password fields must be the same.
             </div>
         </form>
 </div>
+
+<%if (user.credentials.admin) { %>
+
+    <div class="col-sm-3">
+        <div class="well sidebar">
+            <h3 class="text-center"><span class="fa fa-building"></span> Administrative</h3>
+            <ul>
+                <li><a href="in#/manage-users">Manage Users</a></li>
+            </ul>
+        </div>
+    </div>
+<%}%>

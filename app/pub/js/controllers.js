@@ -258,5 +258,6 @@ timelogControllers.controller('AddUserController', ['$scope', '$http', '$rootSco
             $scope.users = result;
         });
 
+        $scope.adding = false;
     }]);
 

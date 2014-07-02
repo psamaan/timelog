@@ -39,9 +39,9 @@ module.exports = function(app, passport, sendgrid) {
     // ADD USER (SECURED)===================
     // =====================================
     // show the add user form
-    app.get('/add-user', isLoggedInAdmin, function(req, res) {
+    app.get('/manage-users', isLoggedInAdmin, function(req, res) {
         // render the page and pass in any flash data if it exists
-        res.render('add-user.ejs', { message: req.flash('signupMessage') });
+        res.render('manage-users.ejs', { message: req.flash('signupMessage') });
     });
 
     // process the add user form by passing it to passport

@@ -14,7 +14,7 @@ var timelog = angular.module('timelog', [
 timelog.config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/', {templateUrl: '/profile', controller: 'PersonalPageController'}).
-        when('/add-user', {templateUrl: '/add-user', controller: 'AddUserController'}).
+        when('/manage-users', {templateUrl: '/manage-users', controller: 'AddUserController'}).
         otherwise({redirectTo: '/'});
 }]);
 
