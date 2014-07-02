@@ -50,7 +50,7 @@ module.exports = function() {
                         query.fullname = dayLog.name;
                         User.findOne(query, function (err, user) {
                             if (err) throw err;
-                            dayLog.mComment = "System Generated Comment: Employee did not clock out manually, record was closed automatically at the end of the day. Worked hours and overtime should be reviewed by " + user.manager;
+                            dayLog.mComment = "System Generated Comment: Employee did not clock out manually, record was closed automatically at the end of the day. Worked hours and overtime should be reviewed by manager";
                             dayLog.save(function (err) {
                                 if (err) throw err;
                                 user.state = "off";
